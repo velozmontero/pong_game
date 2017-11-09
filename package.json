@@ -1,7 +1,7 @@
 {
-  "name": "webpack-demo",
+  "name": "pong",
   "version": "1.0.0",
-  "description": "",
+  "description": "Pong Game",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "start:dev": "webpack-dev-server"
   },
   "keywords": [],
-  "author": "",
+  "author": "Frank Veloz Montero",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -20,7 +20,9 @@
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
+    "express": "^4.16.2",
     "lodash": "^4.17.4",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "socket.io-client": "^2.0.4"
   }
 }

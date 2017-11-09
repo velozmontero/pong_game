@@ -1,13 +1,82 @@
-  canvas {
-    display: block;
-    position: absolute;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+canvas {
+  display: block;
+  position: relative;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 
-  body {
-    background-color: #070707;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 13px Helvetica, Arial;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chat {
+  display: flex;
+  align-items: center;
+  width: 500px;
+  flex-flow: column;
+  height: 100vh;
+}
+
+.game {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  height: 100vh;
+}
+
+.messages-container {
+  width: 100%;
+  flex-grow: 1;
+  background-color: #999;
+  overflow-y: auto;
+}
+
+.input-container {
+  background: #000;
+  padding: 3px;
+  bottom: 0;
+  display: flex;
+  width: 100%;
+}
+
+.input-container input {
+  border: 0;
+  padding: 10px;
+  flex-grow: 1;
+  margin-right: 3px;
+}
+
+.input-container button {
+  width: 10%;
+  background: rgb(130, 224, 255);
+  border: none;
+  padding: 10px;
+}
+
+#messages {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#messages li {
+  padding: 5px 10px;
+}
+
+#messages li:nth-child(odd) {
+  background: #eee;
+}
