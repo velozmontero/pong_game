@@ -49,38 +49,6 @@ var Player1 = {
   }
 };
 
-var Player2 = {
-  x: WIDTH-10,
-  y: 10,
-  width: 20,
-  height: 100,
-  vel: {
-    x: 0,
-    y: 0
-  },
-  /**
-   * Update the position depending on pressed keys
-   */
-  update: function() {
-    if (UPARROW) this.vel.y = -7;
-    else if (DOWNARROW) this.vel.y = 7;
-    else
-      this.vel.y = 0;
-
-    if (RIGHTARROW) this.vel.x = 7;
-    else if (LEFTARROW) this.vel.x = -7;
-    else
-      this.vel.x = 0;
-    // keep the paddle inside of the canvas
-    this.y = Math.max(Math.min(this.y + this.vel.y, HEIGHT - this.height), 0);
-    var x  = Math.max(Math.min(this.x + this.vel.x, WIDTH - this.width), 0);
-    this.x = x < WIDTH/2 ? WIDTH/2 + this.width : x;
-  },
-  draw: function() {
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
-};
-
 var ball = {
   x: Player1.x + Player1.width + 10,
   y: Player1.y + Player1.height / 2,
