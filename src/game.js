@@ -92,16 +92,6 @@ var ball = {
       }
     }
 
-    if (this.x < Player2.x + Player2.width) {
-      if (this.y < Player2.y + Player2.height &&
-        this.y > Player2.y) {
-        //in here, it bounced against the Player1
-        this.vel.x *= -1;
-        this.vel.x += Player2.vel.x;
-        this.vel.y += Player2.vel.y;
-      }
-    }
-
     // if (this.x < 0 && this.vel.x < 0) {
     //   gameRunning = false;
     // }
@@ -159,7 +149,6 @@ function update() {
   if (gameRunning) {
     ball.update();
     Player1.update();
-    Player2.update();
   }
 }
 /**
@@ -171,7 +160,6 @@ function draw() {
   ctx.fillStyle = "#fff";
   ball.draw();
   Player1.draw();
-  Player2.draw();
 
 
   //ai.draw();
