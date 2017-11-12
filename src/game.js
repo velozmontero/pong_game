@@ -90,6 +90,10 @@ function gameEnterFormListeners() {
  */
 function main(Player) {
 
+  var names = document.createElement("div");
+  names.classList.add('names-container');
+  names.setAttribute("style", `width: ${GAME.dimensions.width}px;`);
+
   var game = document.createElement("div");
   game.setAttribute("id", "game");
   game.classList.add('game');
@@ -100,6 +104,20 @@ function main(Player) {
 
   ctx = canvas.getContext("2d");
 
+  for (var ID in GAME.PLAYERS) {
+    var name = document.createElement("h1");
+    name.classList.add('name');
+    name.innerText = GAME.PLAYERS[ID].name;
+
+    if(GAME.PLAYERS[ID].side === 'left'){
+      names.insertBefore(name, names.firstChild);
+    }
+    else {
+      names.appendChild(name);
+    }
+  }
+
+  game.appendChild(names);
   game.appendChild(canvas);
   document.body.appendChild(game);
   chat(NAME);
