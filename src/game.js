@@ -46,6 +46,7 @@ function gameEnterFormListeners() {
       socket.emit('PLAYER JOIN', name);
       document.body.removeChild(btn);
 
+      remove();
       waiting();
     }
     else {
@@ -60,17 +61,16 @@ function gameEnterFormListeners() {
     playing.player = Player.id;
   });
 
-  socket.on('START GAME', (Game) => {
+  socket.on('JOINED AS EXPECTAROR', (Game) => {
     GAME = Game;
-
     console.log('start game', GAME);
+    main();
+  });
 
-    remove();
-
-    if(playing.state){
-      main(GAME.PLAYERS[playing.player]);
-    }
-    else {
+  socket.on('START GAME', (Game) => {
+    if(NAME){
+      GAME = Game;
+      console.log('start game', GAME);
       main();
     }
   });
@@ -80,6 +80,8 @@ function gameEnterFormListeners() {
       GAME = Game;
 
       $('#game').remove();
+
+      remove();
       waiting('OPONENT LEFT THE GAME');
     }
   });
@@ -88,7 +90,7 @@ function gameEnterFormListeners() {
 /**
  * Starts the game
  */
-function main(Player) {
+function main() {
 
   var names = document.createElement("div");
   names.classList.add('names-container');
@@ -103,6 +105,11 @@ function main(Player) {
   canvas.height = GAME.dimensions.height;
 
   ctx = canvas.getContext("2d");
+
+  remove();
+  if ($("#btn-container")){
+    $("#btn-container").remove();
+  }
 
   for (var ID in GAME.PLAYERS) {
     var name = document.createElement("h1");
@@ -122,7 +129,7 @@ function main(Player) {
   document.body.appendChild(game);
   chat(NAME);
 
-  if(Player){
+  if (playing.state){
     // console.log('Player ', Player);
 
     document.addEventListener("keydown", function (evt) {
