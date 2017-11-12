@@ -1,5 +1,7 @@
 import $ from "jquery";
 import socket from './socket';
+import chat from './chat';
+import waiting, { remove } from './waiting';
 
 /**
  * Game elements
@@ -36,13 +38,15 @@ function gameEnterFormListeners() {
 
   $('#start-btn').click(function (e) {
     e.preventDefault();
-    var child = document.getElementById("btn-container");
+    var btn = document.getElementById("btn-container");
     var name = $('#name').val();
     // console.log('clicked');
     if(name){
       NAME = name;
       socket.emit('PLAYER JOIN', name);
-      return document.body.removeChild(child);
+      document.body.removeChild(btn);
+
+      waiting();
     }
     else {
       alert('Enter Name To Join');
@@ -61,11 +65,22 @@ function gameEnterFormListeners() {
 
     console.log('start game', GAME);
 
+    remove();
+
     if(playing.state){
       main(GAME.PLAYERS[playing.player]);
     }
     else {
       main();
+    }
+  });
+
+  socket.on('END GAME', (Game) => {
+    if(NAME){
+      GAME = Game;
+
+      $('#game').remove();
+      waiting('OPONENT LEFT THE GAME');
     }
   });
 }
@@ -76,6 +91,7 @@ function gameEnterFormListeners() {
 function main(Player) {
 
   var game = document.createElement("div");
+  game.setAttribute("id", "game");
   game.classList.add('game');
 
   canvas = document.createElement("canvas");
@@ -86,6 +102,7 @@ function main(Player) {
 
   game.appendChild(canvas);
   document.body.appendChild(game);
+  chat(NAME);
 
   if(Player){
     // console.log('Player ', Player);

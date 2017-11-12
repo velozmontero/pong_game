@@ -1,11 +1,14 @@
 import $ from "jquery";
 import socket from './socket';
 
-function createChat(name){
+function Chat(name){
   var chat = document.createElement("div");
-  chat.classList.add('chat');
-
+  chat.classList.add("chat", "chat-hide");
+  chat.setAttribute("id", "chat");
   chat.innerHTML = `
+  <div id="chat-header" class="chat-header">
+    <i id="chat-close" class="icon ion-close-round"></i>
+  </div>
   <div class="messages-container">
     <ul id="messages"></ul>
   </div>
@@ -30,6 +33,20 @@ function listeners(name){
     sendMessase(name);
   });
 
+  $('#chat-close').click(function (e) {
+    e.stopPropagation();
+
+    console.log('hide');
+
+    $('#chat').addClass('chat-hide');
+  });
+
+  $('#chat-header').click(function (e) {
+    console.log('show');
+
+    $('#chat').removeClass('chat-hide');
+  });
+
   $('#m').keypress(function(e){
     if(e.keyCode === 13){
       sendMessase(name);
@@ -40,13 +57,16 @@ function listeners(name){
     $('#messages').append($('<li>').text(data.name+': '+data.text));
   });
 
-  var scroll = () => $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
 }
+
+const scroll = () => $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
 
 const sendMessase = (name) => {
-  socket.emit('CHAT MESSAGE', { name: name, text: $('#m').val()});
-  $('#m').val('');
-  scroll();
+  if ($('#m').val()){
+    socket.emit('CHAT MESSAGE', { name: name, text: $('#m').val() });
+    $('#m').val('');
+    scroll();
+  }
 }
 
-export default createChat;
+export default Chat;
