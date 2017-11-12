@@ -1,7 +1,7 @@
 import $ from "jquery";
 import socket from './socket';
 
-function createChat(){
+function createChat(name){
   var chat = document.createElement("div");
   chat.classList.add('chat');
 
@@ -18,31 +18,33 @@ function createChat(){
   </div>`;
 
   document.body.appendChild(chat);
+
+  return listeners(name);
 }
 
-export const listeners = function(){
+function listeners(name){
 
   $('#btn').click(function(e){
     e.preventDefault();
 
-    sendMessase();
+    sendMessase(name);
   });
 
   $('#m').keypress(function(e){
     if(e.keyCode === 13){
-      sendMessase();
+      sendMessase(name);
     }
   });
 
-  socket.on('chat message', function(msg){
-    $('#messages').append($('<li>').text(msg));
+  socket.on('CHAT MESSAGE', function(data){
+    $('#messages').append($('<li>').text(data.name+': '+data.text));
   });
 
   var scroll = () => $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
 }
 
-const sendMessase = () => {
-  socket.emit('chat message', $('#m').val());
+const sendMessase = (name) => {
+  socket.emit('CHAT MESSAGE', { name: name, text: $('#m').val()});
   $('#m').val('');
   scroll();
 }

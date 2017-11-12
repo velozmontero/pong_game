@@ -1,10 +1,5 @@
-import { WIDTH, HEIGHT, PI } from './config';
-// console.log(WIDTH, HEIGHT, PI);
-
-var UPARROW    = false;
-var DOWNARROW  = false;
-var RIGHTARROW = false;
-var LEFTARROW  = false;
+import $ from "jquery";
+import socket from './socket';
 
 /**
  * Game elements
@@ -13,166 +8,172 @@ var canvas;
 var ctx;
 var keystate;
 var gameRunning = true;
-/**
- * The Player1 paddle
- *
- * @type {Object}
- */
-var Player1 = {
-  x: 10,
-  y: 10,
-  width: 20,
-  height: 100,
-  vel: {
-    x: 0,
-    y: 0
-  },
-  /**
-   * Update the position depending on pressed keys
-   */
-  update: function() {
-    if (UPARROW) this.vel.y = -7;
-    else if (DOWNARROW) this.vel.y = 7;
-    else
-      this.vel.y = 0;
 
-    if (RIGHTARROW) this.vel.x = 7;
-    else if (LEFTARROW) this.vel.x = -7;
-    else
-      this.vel.x = 0;
-    // keep the paddle inside of the canvas
-    this.y = Math.max(Math.min(this.y + this.vel.y, HEIGHT - this.height), 0);
-    this.x = Math.max(Math.min(this.x + this.vel.x, WIDTH/2 - this.width), 0);
-  },
-  draw: function() {
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }
-};
+var GAME = null;
 
-var ball = {
-  x: Player1.x + Player1.width + 10,
-  y: Player1.y + Player1.height / 2,
-  vel: null,
-  side: 20,
-  speed: 5,
-  /**
-   * Serves the ball towards the specified side
-   *
-   * @param  {number} side 1 right
-   *                       -1 left
-   */
-  init: function() {
-    var r = Math.random() - 0.5;
-    var angle = PI * r;
-    this.vel = {
-      x: this.speed * Math.cos(angle),
-      y: this.speed * Math.sin(angle)
+var playing = {
+  state: false,
+  player: null,
+}
+
+var NAME = '';
+
+export const initialize = () => {
+  var btnContainer = document.createElement("div");
+  btnContainer.setAttribute("id", "btn-container");
+  btnContainer.classList.add('btn-container');
+  btnContainer.innerHTML = `
+    <input placeholder='ENTER NAME' id='name' class='name-input' type='text'/>
+    <button id='start-btn' class='start-btn'>START GAME</button>
+  `;
+
+  document.body.appendChild(btnContainer);
+
+  return gameEnterFormListeners();
+}
+
+function gameEnterFormListeners() {
+
+  $('#start-btn').click(function (e) {
+    e.preventDefault();
+    var child = document.getElementById("btn-container");
+    var name = $('#name').val();
+    // console.log('clicked');
+    if(name){
+      NAME = name;
+      socket.emit('PLAYER JOIN', name);
+      return document.body.removeChild(child);
     }
-  },
-  /**
-   * Update the ball position and keep it within the canvas
-   */
-  update: function() {
-    this.x += this.vel.x;
-    this.y += this.vel.y;
-    if (this.y < 0 || this.y > HEIGHT - this.side) {
-      this.vel.y *= -1;
+    else {
+      alert('Enter Name To Join');
     }
-    if (this.x + this.side >= WIDTH) {
-      this.vel.x *= -1;
+  });
+
+  socket.on('JOINED AS PLAYER', (Player) => {
+    console.log('JOINED AS PLAYER ', Player);
+
+    playing.state = true;
+    playing.player = Player.id;
+  });
+
+  socket.on('START GAME', (Game) => {
+    GAME = Game;
+
+    console.log('start game', GAME);
+
+    if(playing.state){
+      main(GAME.PLAYERS[playing.player]);
     }
-
-    if (this.x < Player1.x + Player1.width) {
-      if (this.y < Player1.y + Player1.height &&
-        this.y > Player1.y) {
-        //in here, it bounced against the Player1
-        this.vel.x *= -1;
-        this.vel.x += Player1.vel.x;
-        this.vel.y += Player1.vel.y;
-      }
+    else {
+      main();
     }
+  });
+}
 
-    // if (this.x < 0 && this.vel.x < 0) {
-    //   gameRunning = false;
-    // }
-
-  },
-  /**
-   * Draw the ball to the canvas
-   */
-  draw: function() {
-    ctx.fillRect(this.x, this.y, this.side, this.side);
-  }
-};
 /**
  * Starts the game
  */
-function main() {
+function main(Player) {
+
   var game = document.createElement("div");
   game.classList.add('game');
 
   canvas = document.createElement("canvas");
-  canvas.width = WIDTH;
-  canvas.height = HEIGHT;
+  canvas.width = GAME.dimensions.width;
+  canvas.height = GAME.dimensions.height;
 
   ctx = canvas.getContext("2d");
 
   game.appendChild(canvas);
   document.body.appendChild(game);
 
-  document.addEventListener("keydown", function(evt) {
-    if (evt.keyCode === 38) UPARROW = true;
-    else if (evt.keyCode === 40) DOWNARROW = true;
-    if (evt.keyCode === 39) RIGHTARROW = true;
-    else if (evt.keyCode === 37) LEFTARROW = true;
-  });
+  if(Player){
+    // console.log('Player ', Player);
 
-  document.addEventListener("keyup", function(evt) {
-    if (evt.keyCode === 38) UPARROW = false;
-    else if (evt.keyCode === 40) DOWNARROW = false;
-    if (evt.keyCode === 39) RIGHTARROW = false;
-    else if (evt.keyCode === 37) LEFTARROW = false;
+    document.addEventListener("keydown", function (evt) {
+      if (evt.keyCode === 38) socket.emit('ACTION', {
+        type: 'MOVE',
+        direction: 'UP',
+      });
+
+      else if (evt.keyCode === 40) socket.emit('ACTION', {
+        type: 'MOVE',
+        direction: 'DOWN',
+      });
+
+      if (evt.keyCode === 39) socket.emit('ACTION', {
+        type: 'MOVE',
+        direction: 'RIGHT',
+      });
+
+      else if (evt.keyCode === 37) socket.emit('ACTION', {
+        type: 'MOVE',
+        direction: 'LEFT',
+      });
+    });
+
+    document.addEventListener("keyup", function (evt) {
+      if (evt.keyCode === 38) socket.emit('ACTION', {
+        type: 'STOP',
+        direction: 'UP',
+      });
+
+      else if (evt.keyCode === 40) socket.emit('ACTION', {
+        type: 'STOP',
+        direction: 'DOWN',
+      });
+
+      if (evt.keyCode === 39) socket.emit('ACTION', {
+        type: 'STOP',
+        direction: 'RIGHT',
+      });
+
+      else if (evt.keyCode === 37) socket.emit('ACTION', {
+        type: 'STOP',
+        direction: 'LEFT',
+      });
+    });
+  }
+
+  socket.on('GAME UPDATE', (Game) => {
+    GAME = Game;
+    console.log('updated');
   });
-  ball.init();
 
   var loop = function() {
-    update();
     draw();
-    window.requestAnimationFrame(loop, canvas);
+    socket.emit('GAME UPDATE');
+    if(GAME.running){
+      window.requestAnimationFrame(loop, canvas);
+    }
   };
   window.requestAnimationFrame(loop, canvas);
 }
-/**
- * Update all game objects
- */
-function update() {
-  if (gameRunning) {
-    ball.update();
-    Player1.update();
-  }
-}
+
 /**
  * Clear canvas and draw all game objects and net
  */
 function draw() {
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillRect(0, 0, 700, 600);
   ctx.save();
   ctx.fillStyle = "#fff";
-  ball.draw();
-  Player1.draw();
 
+  ctx.fillRect(GAME.BALL.position.x, GAME.BALL.position.y, GAME.BALL.size, GAME.BALL.size);
+
+  for (var ID in GAME.PLAYERS) {
+    ctx.fillRect(GAME.PLAYERS[ID].position.x, GAME.PLAYERS[ID].position.y, GAME.PLAYERS[ID].dimensions.width, GAME.PLAYERS[ID].dimensions.height);
+  }
 
   //ai.draw();
   // draw the net
   var w = 4;
-  var x = (WIDTH - w) * 0.5;
+  var x = (700 - w) * 0.5;
   var y = 0;
-  var step = HEIGHT / 20; // how many net segments
-  while (y < HEIGHT) {
+  var step = 600 / 20; // how many net segments
+  while (y < 600) {
     ctx.fillRect(x, y + step * 0.25, w, step * 0.5);
     y += step;
   }
   ctx.restore();
 }
 
-export default main;
