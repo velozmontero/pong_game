@@ -82,7 +82,7 @@ function gameEnterFormListeners() {
       $('#game').remove();
 
       remove();
-      waiting('OPONENT LEFT THE GAME');
+      waiting('OPPONENT LEFT THE GAME');
     }
   });
 }
