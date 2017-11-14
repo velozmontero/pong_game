@@ -9,7 +9,6 @@ import waiting, { remove } from './waiting';
 var canvas;
 var ctx;
 var keystate;
-var gameRunning = true;
 
 var GAME = null;
 
@@ -107,6 +106,7 @@ function main() {
   ctx = canvas.getContext("2d");
 
   remove();
+
   if ($("#btn-container")){
     $("#btn-container").remove();
   }
@@ -127,6 +127,7 @@ function main() {
   game.appendChild(names);
   game.appendChild(canvas);
   document.body.appendChild(game);
+  
   chat(NAME);
 
   if (playing.state){

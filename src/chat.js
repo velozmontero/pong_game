@@ -5,6 +5,7 @@ function Chat(name){
   var chat = document.createElement("div");
   chat.classList.add("chat", "chat-hide");
   chat.setAttribute("id", "chat");
+  
   chat.innerHTML = `
   <div id="chat-header" class="chat-header">
     <i id="chat-close" class="icon ion-close-round"></i>
