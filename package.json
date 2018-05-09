@@ -2,29 +2,31 @@
   "name": "pong",
   "version": "1.0.0",
   "description": "Pong Game",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start:dev": "webpack-dev-server"
+    "start-dev": "webpack-dev-server",
+    "start-prod": "nodemon server.js"
   },
   "keywords": [],
   "author": "Frank Veloz Montero",
   "license": "ISC",
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.1.1",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.0",
-    "uglifyjs-webpack-plugin": "^1.0.1",
-    "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.4"
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.1.2",
+    "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
-    "compression": "^1.7.1",
-    "express": "^4.16.2",
+    "compression": "^1.7.2",
+    "express": "^4.16.3",
     "jquery": "^3.2.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "path": "^0.12.7",
-    "socket.io-client": "^2.0.4"
+    "socket.io-client": "^2.1.0"
   }
 }
