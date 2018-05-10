@@ -60,7 +60,7 @@ function gameEnterFormListeners() {
     playing.player = Player.id;
   });
 
-  socket.on('JOINED AS EXPECTAROR', (Game) => {
+  socket.on('JOINED AS SPECTATOR', (Game) => {
     GAME = Game;
     console.log('start game', GAME);
     main();
