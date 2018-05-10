@@ -2,26 +2,27 @@ import $ from "jquery";
 import socket from './socket';
 
 function Chat(name){
-  var chat = document.createElement("div");
-  chat.classList.add("chat", "chat-hide");
-  chat.setAttribute("id", "chat");
+  var container = document.createElement("div");
+  container.classList.add("chat", "chat-hide");
+  container.setAttribute("id", "chat");
   
-  chat.innerHTML = `
+  container.innerHTML = `
   <div id="chat-header" class="chat-header">
     <i id="chat-close" class="icon ion-close-round"></i>
   </div>
+  
   <div class="messages-container">
     <ul id="messages"></ul>
   </div>
 
   <div class="input-container">
     <div style="flex-grow: 1; display: flex;">
-      <input id="m" autocomplete="off" />
+      <input type="text" id="m" autocomplete="off" />
       <button id="btn">Send</button>
     </div>
   </div>`;
 
-  document.body.appendChild(chat);
+  document.body.appendChild(container);
 
   return listeners(name);
 }
@@ -31,7 +32,7 @@ function listeners(name){
   $('#btn').click(function(e){
     e.preventDefault();
 
-    sendMessase(name);
+    sendMessage(name);
   });
 
   $('#chat-close').click(function (e) {
@@ -50,7 +51,7 @@ function listeners(name){
 
   $('#m').keypress(function(e){
     if(e.keyCode === 13){
-      sendMessase(name);
+      sendMessage(name);
     }
   });
 
@@ -62,10 +63,15 @@ function listeners(name){
 
 const scroll = () => $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
 
-const sendMessase = (name) => {
-  if ($('#m').val()){
-    socket.emit('CHAT MESSAGE', { name: name, text: $('#m').val() });
+const sendMessage = (name) => {
+  if ($('#m').val()) {
+    socket.emit('CHAT MESSAGE', { 
+      name: name, 
+      text: $('#m').val() 
+    });
+
     $('#m').val('');
+    
     scroll();
   }
 }

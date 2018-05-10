@@ -1,10 +1,10 @@
 import $ from "jquery";
 
 function waiting(text) {
-  var waiting = document.createElement("div");
-  waiting.classList.add('waiting');
-  waiting.setAttribute("id", "waiting");
-  waiting.innerHTML = `
+  var container = document.createElement("div");
+  container.classList.add('waiting');
+  container.setAttribute("id", "waiting");
+  container.innerHTML = `
     <div class="psoload">
       <div class="straight"></div>
       <div class="curve"></div>
@@ -14,7 +14,7 @@ function waiting(text) {
     <h3>${text || 'WAITING FOR OPONENT'}</h3>
   `;
 
-  document.body.appendChild(waiting);
+  document.body.prepend(container);
 }
 
 export const remove = function (){
