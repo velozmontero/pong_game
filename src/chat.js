@@ -27,7 +27,7 @@ function Chat(name){
   return listeners(name);
 }
 
-function listeners(name){
+function listeners(name) {
 
   $('#btn').click(function(e){
     e.preventDefault();
@@ -71,7 +71,7 @@ const sendMessage = (name) => {
     });
 
     $('#m').val('');
-    
+
     scroll();
   }
 }
