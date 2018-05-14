@@ -107,7 +107,7 @@ function main() {
 
   remove();
 
-  if ($("#btn-container")){
+  if ($("#btn-container").length){
     $("#btn-container").remove();
   }
 
@@ -128,6 +128,8 @@ function main() {
   game.appendChild(canvas);
   document.getElementById('root').appendChild(game);
   
+  console.log('chat ', $("#chat"));
+
   chat(NAME);
   
   if (playing.state){

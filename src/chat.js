@@ -2,8 +2,12 @@ import $ from "jquery";
 import socket from './socket';
 
 function Chat(name){
-  $('#chat').remove();
-  socket.removeListener('CHAT MESSAGE', chatMessage);
+  if ($("#chat").length) {
+    return;
+  }
+
+  // $('#chat').remove();
+  // socket.removeListener('CHAT MESSAGE', chatMessage);
 
   var container = document.createElement("div");
   container.classList.add("chat", "chat-hide");
