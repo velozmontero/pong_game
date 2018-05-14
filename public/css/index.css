@@ -23,6 +23,7 @@ body {
 }
 
 .chat {
+  z-index: 999999;
   opacity: 0.9;
   position: fixed;
   width: 300px;

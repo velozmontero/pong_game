@@ -14,7 +14,7 @@ function waiting(text) {
     <h3>${text || 'WAITING FOR OPONENT'}</h3>
   `;
 
-  document.body.prepend(container);
+  document.getElementById('root').prepend(container);
 }
 
 export const remove = function (){

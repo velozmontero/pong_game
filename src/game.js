@@ -28,7 +28,7 @@ export const initialize = () => {
     <button id='start-btn' class='start-btn'>START GAME</button>
   `;
 
-  document.body.appendChild(btnContainer);
+  document.getElementById('root').appendChild(btnContainer);
 
   return gameEnterFormListeners();
 }
@@ -43,7 +43,7 @@ function gameEnterFormListeners() {
     if(name){
       NAME = name;
       socket.emit('PLAYER JOIN', name);
-      document.body.removeChild(btn);
+      document.getElementById('root').removeChild(btn);
 
       remove();
       waiting();
@@ -126,10 +126,10 @@ function main() {
 
   game.appendChild(names);
   game.appendChild(canvas);
-  document.body.appendChild(game);
+  document.getElementById('root').appendChild(game);
   
   chat(NAME);
-
+  
   if (playing.state){
     // console.log('Player ', Player);
 
